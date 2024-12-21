@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\MainController;
 use App\Models\Mahasiswa;
 use App\Models\Prodi;
 use App\Providers\RouteServiceProvider;
@@ -179,7 +180,8 @@ class RegisterController extends Controller
             // $credentials = $request->only('register_nim', 'register_password');
             if (Auth::attempt(array('nim' => $request->register_nim, 'password' => $request->register_password))) {
                 $request->session()->forget('sign-up-mode');
-
+                // MainController::infoLog("Mahasiswa {$user->name} berhasil mendaftar");
+                
                 return redirect()->route('home');
             }
         }

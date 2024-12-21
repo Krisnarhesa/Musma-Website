@@ -66,19 +66,29 @@
             <h3 class="text-u-c text-muted">Persentase Pemilih</h3>
           </div>
           <div class="box-body">
-            <div ui-jp="plot" ui-refresh="app.setting.color" ui-options="
-            [{data: {{ $data['jml_milih'] }}, label: &#x27;Memilih&#x27;}, {data: {{ $data['jml_golput'] }}, label: &#x27;Golput&#x27;}],
-            {
-              series: { pie: { show: true, innerRadius: 0, stroke: { width: 0 }, label: { show: true, threshold: 0.05 } } },
-              legend: {backgroundColor: 'transparent'},
-              colors: ['#0cc2aa','#fcc100'],
-              grid: { hoverable: true, clickable: true, borderWidth: 0, color: 'rgba(120,120,120,0.5)' },   
-              tooltip: true,
-              tooltipOpts: { content: '%s: %p.0%' }
-            }
-          " style="height:465px"></div>
-          </div>
-        </div>
+    <div ui-jp="plot" ui-refresh="app.setting.color" ui-options="
+        [
+          {data: [{{ $data['jml_milih'] }}], label: 'Memilih'},
+          {data: [{{ $data['jml_golput'] }}], label: 'Golput'}
+        ],
+        {
+          series: {
+            pie: { show: true, innerRadius: 0, stroke: { width: 0 }, label: { show: true, threshold: 0.05 } }
+          },
+          legend: { backgroundColor: 'transparent' },
+          colors: ['#4caf50', '#f44336'],
+          grid: { hoverable: true, clickable: true, borderWidth: 0, color: 'rgba(120,120,120,0.5)' },
+          tooltip: true,
+          tooltipOpts: { content: '%s: %p.0%' }
+        }
+    " style="height:465px"></div>
+</div>
+<div style="display: flex; justify-content: center; gap: 50px; padding: 10px">
+    <p style="font-weight: bold">Total Terverifikasi : {{ $data['jml_milih'] + $data['jml_golput'] }}</p>
+    <p style="font-weight: bold">Jumlah Memilih : {{ $data['jml_milih'] }}</p>
+    <p style="font-weight: bold">Jumlah Golput : {{ $data['jml_golput'] }}</p>
+</div>
+
       </div>
     </div>
     <div class="col-md-7 col-lg-12 v-b">
@@ -127,88 +137,85 @@
 			type: 'get',
 			success: function(data){
 				chart = JSON.parse(data);
+        console.log(chart);
 				updateChart(chart);
 			}
 		});
 	}
 
-	function updateChart(data){
+	// Deklarasikan variabel global
+var chartSMFT = null;
+var chartBPMFT = null;
 
-		var smft_calons = [];
-   	for(var k in data.SMFT) smft_calons.push(k);
+function updateChart(data) {
+    var smft_calons = Object.keys(data.SMFT);
+    var bpmft_calons = Object.keys(data.BPMFT);
 
-		var prodis = data.SMFT[smft_calons[0]].prodis;
+    if (!smft_calons.length || !bpmft_calons.length) {
+        console.error("Tidak ada data untuk SMFT atau BPMFT");
+        return;
+    }
+
+    var prodis = data.SMFT[smft_calons[0]].prodis || [];
+    if (!prodis.length) {
+        console.error("Tidak ada data prodi");
+        return;
+    }
+
     var datasmft = {
-			labels: prodis,
-			datasets: [
-			{
-				label: smft_calons[0],
-				backgroundColor: 'rgba(255, 99, 132, 0.2)',
-				borderColor: 'rgba(255, 99, 132, 1)',
-				borderWidth: 1,
-				data: data.SMFT[smft_calons[0]].prodi_value
-			}, {
-				label: smft_calons[1],
-				backgroundColor: 'rgba(54, 162, 235, 0.2)',
-				borderColor: 'rgba(54, 162, 235, 1)',
-				borderWidth: 1,
-				data: data.SMFT[smft_calons[1]].prodi_value
-			}]
-		};
+        labels: prodis,
+        datasets: smft_calons.map((calon, index) => ({
+            label: calon,
+            backgroundColor: index === 0 ? 'rgba(255, 99, 132, 0.2)' : 'rgba(54, 162, 235, 0.2)',
+            borderColor: index === 0 ? 'rgba(255, 99, 132, 1)' : 'rgba(54, 162, 235, 1)',
+            borderWidth: 1,
+            data: data.SMFT[calon]?.prodi_value || []
+        }))
+    };
 
-		var bpmft_calons = [];
-   	for(var k in data.BPMFT) bpmft_calons.push(k);
+    var databpmft = {
+        labels: prodis,
+        datasets: bpmft_calons.map((calon, index) => ({
+            label: calon,
+            backgroundColor: `rgba(${index * 50 + 100}, ${index * 70 + 50}, ${index * 90 + 20}, 0.2)`,
+            borderColor: `rgba(${index * 50 + 100}, ${index * 70 + 50}, ${index * 90 + 20}, 1)`,
+            borderWidth: 1,
+            data: data.BPMFT[calon]?.prodi_value || []
+        }))
+    };
 
-		var databpmft = {
-			labels: prodis,
-			datasets: [{
-				label: bpmft_calons[0],
-				backgroundColor: 'rgba(255, 99, 132, 0.2)',
-				borderColor: 'rgba(255, 99, 132, 1)',
-				borderWidth: 1,
-				data: data.BPMFT[bpmft_calons[0]].prodi_value
-			}, {
-				label: bpmft_calons[1],
-				backgroundColor: 'rgba(54, 162, 235, 0.2)',
-				borderColor: 'rgba(54, 162, 235, 1)',
-				borderWidth: 1,
-				data: data.BPMFT[bpmft_calons[1]].prodi_value
-			}, {
-				label: bpmft_calons[2],
-				backgroundColor: 'rgba(14, 255, 108, 0.2)',
-				borderColor: 'rgba(54, 235, 65)',
-				borderWidth: 1,
-				data: data.BPMFT[bpmft_calons[2]].prodi_value
-			}]
-		};  
+    // Hancurkan chart sebelumnya jika sudah ada
+    if (chartSMFT) chartSMFT.destroy();
+    if (chartBPMFT) chartBPMFT.destroy();
 
-		var chartSMFT = new Chart(cSmft, {
-			type: 'bar',
-			data: datasmft,
-			options: {
-				scales: {
-				yAxes: [{
-					ticks: {
-					beginAtZero: true
-					}
-				}]
-				}
-			}
-		});
+    // Buat chart baru
+    chartSMFT = new Chart(cSmft, {
+        type: 'bar',
+        data: datasmft,
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }]
+            }
+        }
+    });
 
-		var chartBPMFT = new Chart(cBpmft, {
-			type: 'bar',
-			data: databpmft,
-			options: {
-				scales: {
-					yAxes: [{
-						ticks: {
-						beginAtZero: true
-						}
-					}]
-				}
-			}
-		});
-	}
+    chartBPMFT = new Chart(cBpmft, {
+        type: 'bar',
+        data: databpmft,
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }]
+            }
+        }
+    });
+}
 </script>
 @endsection

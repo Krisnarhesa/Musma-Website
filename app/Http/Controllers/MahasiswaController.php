@@ -23,7 +23,36 @@ class MahasiswaController extends Controller
             $output = '<tr>
              <td>' . $no++ . '</td>
              <td>' . $item->user->name . '</td>
-             <td>' . $item->user->nim . '</td>';
+             <td>' . $item->user->nim . '</td>
+             <td>';
+
+            switch ($item->user->prodi_id) {
+                case 1:
+                    $output .= 'Teknik Sipil';
+                    break;
+                case 2:
+                    $output .= 'Teknik Arsitektur';
+                    break;
+                case 3:
+                    $output .= 'Teknik Mesin';
+                    break;
+                case 4:
+                    $output .= 'Teknik Elektro';
+                    break;
+                case 5:
+                    $output .= 'Teknologi Informasi';
+                    break;
+                case 6:
+                    $output .= 'Teknik Lingkungan';
+                    break;
+                case 7:
+                    $output .= 'Teknik Industri';
+                    break;
+                default:
+                    $output .= 'Program Studi Tidak Diketahui';
+            }
+
+            $output .= '</td>';
 
             if ($item->status == 'terverifikasi' || $item->status == 'voted') {
                 $output .= '<td> <div class="text-center"><i class="fa fa-check"></i></div></td>';
@@ -31,8 +60,8 @@ class MahasiswaController extends Controller
                 $output .= '<td> <a href=' . $item->takeimage . ' data-fancybox="gallery" data-caption=' . $item->name . ' ><img src=' . $item->takeimage . ' alt="avatar" style="max-width: 100px"></a></td>';
             }
 
-            $output .= '<td>' . $item->status . '</td>
-             <td>' . $item->created_at . '</td>';
+            $output .= '<td>' . ($item->status == "voted" ? "Telah Memilih" : "Golput") . '</td>
+            <td>' . $item->created_at . '</td>';
 
             if ($item->status == 'terverifikasi' || $item->status == 'voted') {
                 $output .= '<td> <div class=" text-center"><i class="fa fa-check"></i></div></td>';

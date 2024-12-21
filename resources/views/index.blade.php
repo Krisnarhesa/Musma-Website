@@ -1,9 +1,9 @@
-@extends('layouts/master', ['title' => 'Musma Teknik 2023'])
+@extends('layouts/master', ['title' => 'Musma Teknik 2024'])
 @section('content')
   @php
-    $date = date('Y-m-d');
-    $data = json_decode(file_get_contents(public_path('data/info.json')), true);
-    $voteDate = app()->environment('local') ? date('Y-m-d') : $data['masa_pemilihan']['date'];
+    $currentDate = now()->format('Y-m-d H:i:s');
+    $startDate = '2024-01-14 06:00:00';
+    $endDate = '2025-01-14 18:00:00';
   @endphp
   <div role="main" class="main bg-dark" id="home">
     <section class="slider-container rev_slider_wrapper" style="height: 100vh;">
@@ -36,7 +36,7 @@
             <div class="tp-caption font-weight-light text-color-light"
               data-frames='[{"from":"opacity:0;","speed":300,"to":"o:1;","delay":2300,"split":"chars","splitdelay":0.05,"ease":"Power2.easeInOut"},{"delay":"wait","speed":1000,"to":"y:[100%];","mask":"x:inherit;y:inherit;s:inherit;e:inherit;","ease":"Power2.easeInOut"}]'
               data-x="center" data-y="center" data-voffset="['85','85','85','140']" data-fontsize="['18','18','18','40']"
-              data-lineheight="['26','26','26','45']">TEKNIK 2023</div>
+              data-lineheight="['26','26','26','45']">TEKNIK 2024</div>
 
           </li>
         </ul>
@@ -105,11 +105,11 @@
                   Anda Sudah Melakukan Vote
                 @elseif($mahasiswa->status != 'terverifikasi' && $mahasiswa->status != 'voted')
                   Akun Anda Belum Terverifikasi. silahkan tunggu hingga admin memverifikasi
-                @elseif ($date > $voteDate)
+                @elseif ($currentDate > $endDate)
                   Masa Vote Telah Berakhir!
                 @else
-                  Akun Terverifikasi! @if ($date != $voteDate)
-                    Silahkan Login kembali pada tanggal 08 Januari 2024 untuk
+                  Akun Terverifikasi! @if ($currentDate < $startDate || $currentDate > $endDate)
+                    Silahkan Login kembali pada tanggal 14 Januari 2024 pukul 06.00 - 18.00 untuk
                     melakukan pemilihan
                   @else
                     Silahkan Pilih salah satu calon ketua SMFT dan BPMFT dengan cara mengklik
@@ -157,7 +157,7 @@
                   <div data-aos="fade-up" data-aos-delay="400" class="mt-6">
                     <label class="custom-radio">
                       <input type="radio" @guest disabled @endguest
-                        @auth @if ($date != $voteDate || $mahasiswa->status == 'terdaftar' || $mahasiswa->status == 'voted') disabled
+                        @auth @if (($currentDate < $startDate|| $currentDate > $endDate) || $mahasiswa->status == 'terdaftar' || $mahasiswa->status == 'voted') disabled
 											@endif @foreach ($suara as $item2){{ $item->id == $item2->calon_id ? 'checked' : '' }}@endforeach @endauth
                         required name="smft" value="{{ $item->id }}" />
                       <span class="radio-btn"
@@ -194,7 +194,7 @@
                   <div data-aos="fade-up" data-aos-delay="400" class="mt-6">
                     <label class="custom-radio">
                       <input type="radio" @guest disabled @endguest
-                        @auth @if ($date != $voteDate || $mahasiswa->status == 'terdaftar' || $mahasiswa->status == 'voted') disabled
+                        @auth @if (($currentDate < $startDate || $currentDate > $endDate) || $mahasiswa->status == 'terdaftar' || $mahasiswa->status == 'voted') disabled
                                         @endif @foreach ($suara as $item2){{ $item->id == $item2->calon_id ? 'checked' : '' }}@endforeach @endauth
                         required name="bpmft" value="{{ $item->id }}" />
                       <span class="radio-btn"
@@ -222,16 +222,18 @@
 
             <div class="clearfix"></div>
             @auth
-              @if ($date == $voteDate)
+              @if ($currentDate > $startDate && $currentDate < $endDate)
                 <div class="result mt-3  d-flex justify-content-center">
                   @if ($mahasiswa->status != 'voted' && $mahasiswa->status == 'terverifikasi')
                     <button class="btn btn-primary" type="button" id="btn-submit" data-toggle="modal"
                       data-target="#exampleModalalert">Submit</button>
                   @endif
-                  @if ($mahasiswa->status == 'voted')
-                    <button class="btn btn-primary d-block" type="button" id="btn-See">Lihat Hasil
-                      Sementara</button>
-                  @endif
+                  <!--@if ($mahasiswa->status == 'voted')
+      -->
+                  <!--  <button class="btn btn-primary d-block" type="button" id="btn-See">Lihat Hasil-->
+                  <!--    Sementara</button>-->
+                  <!--
+      @endif-->
                 </div>
               @endif
             @endauth
@@ -269,7 +271,7 @@
                 </div>
                 <div class="feature-box-info pl-1">
                   <h5 class="font-weight-light text-color-light opacity-7 mb-0">Tanggal Pemilihan</h5>
-                  <p class="text-color-light font-weight-semibold mb-0">08 / Januari / 2024</p>
+                  <p class="text-color-light font-weight-semibold mb-0">14 / Januari / 2024</p>
                 </div>
               </div>
             </div>
@@ -281,12 +283,13 @@
                 <div class="feature-box-info pl-1">
                   <h5 class="font-weight-light text-color-light opacity-7 mb-0">NARAHUBUNG</h5>
                   <p class="mb-0">
-                    <span class="social-icons-Instagram"><a href="https://bit.ly/2L6nYLe" target="_blank"
-                        class="text-color-light font-weight-semibold" title="Whatsapp"><i
-                          class="mr-1 fab fa-whatsapp"></i> +6282146403929</a></span>
-                    <span class="social-icons-twitter pl-1"><a href="https://line.me/ti/p/~deyaachan" target="_blank"
-                        class="text-color-light font-weight-semibold" title="Line"><i class="mr-1 fab fa-line"></i>
-                        deyaachan</a></span>
+                    <span class="social-icons-Instagram"><a href="https://api.whatsapp.com/send?phone=6287701115126"
+                        target="_blank" class="text-color-light font-weight-semibold" title="Whatsapp"><i
+                          class="mr-1 fab fa-whatsapp"></i> +6287701115126</a></span>
+                    <span class="social-icons-twitter pl-1"><a href="https://line.me/ti/p/~Komang.uda"
+                        target="_blank" class="text-color-light font-weight-semibold" title="Line"><i
+                          class="mr-1 fab fa-line"></i>
+                        Komang.uda</a></span>
                   </p>
 
                 </div>
@@ -353,7 +356,7 @@
                                 jika sudah
                                 memiliki akun atau sudah
                                 melakukan registrasi sebelumnya. Registrasi dapat dilakukan dari
-                                tanggal <strong>{{ $data['masa_registrasi']['description'] }}.
+                                tanggal <strong>8 sampai 13 Januari 2024.
                                 </strong>
                               </p>
                               <span class="vertical-timeline-element-date">
@@ -401,7 +404,7 @@
                                 anda
                                 siap digunakan untuk
                                 memilih secara serempak pada tanggal
-                                <b>{{ $data['masa_pemilihan']['description'] }}</b>.
+                                <b>14 Januari 2024</b>.
                               </p>
                               <span class="vertical-timeline-element-date"><i class="fas fa-arrow-down"></i></span>
                             </div>
@@ -429,7 +432,8 @@
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Hasil Sementara</h5>
+            <!--<h5 class="modal-title" id="exampleModalLabel">Hasil Sementara</h5>-->
+            <h5 class="modal-title" id="exampleModalLabel">Vote Sukses</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
@@ -438,16 +442,16 @@
             <div class="alert alert-success" style="display:none">
               {{ Session::get('success') }}
             </div>
-            <div class="chart">
-              <div class="item m-3">
-                <p class="text-center font-weight-bold"># Vote SMFT</p>
-                <canvas id="smft" width="250" height="180"></canvas>
-              </div>
-              <div class="item m-3">
-                <p class="text-center font-weight-bold"># Vote BPMFT</p>
-                <canvas id="bpmft" width="250" height="180"></canvas>
-              </div>
-            </div>
+            <!--<div class="chart">-->
+            <!--  <div class="item m-3">-->
+            <!--    <p class="text-center font-weight-bold"># Vote SMFT</p>-->
+            <!--    <canvas id="smft" width="250" height="180"></canvas>-->
+            <!--  </div>-->
+            <!--  <div class="item m-3">-->
+            <!--    <p class="text-center font-weight-bold"># Vote BPMFT</p>-->
+            <!--    <canvas id="bpmft" width="250" height="180"></canvas>-->
+            <!--  </div>-->
+            <!--</div>-->
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -505,8 +509,6 @@
       });
       var cSmft = document.getElementById('smft');
       var cBpmft = document.getElementById('bpmft');
-
-
       function loadDataChart() {
         $.ajax({
           url: '{{ Route('chart') }}',
@@ -517,31 +519,63 @@
           }
         });
       }
-
+      //   $('#btn-submit-modal').on("click", function(event) {
+      //     event.preventDefault()
+      //     var data = $('form').serialize();
+      //     $.ajax({
+      //       url: "{{ route('vote') }}",
+      //       method: "POST",
+      //       data: data,
+      //       success: function(data) {
+      //         loadDataChart();
+      //         $('#hasil-sementara').modal('show');
+      //         $(".alert-success").css("display", "block");
+      //         $(".warning").append("<strong class='text-center text-light'>" + data + "</strong");
+      //         $(".warning-start").hide();
+      //         $(".alert-success").append("<strong class='text-center'>" + data + "</strong");
+      //         $(".result").append(
+      //           "<button class='btn btn-primary d-block' type='button' id='btn-See'>Lihat Hasil Sementara</button>"
+      //         )
+      //         $("#btn-submit").remove()
+      //         window.setTimeout(function() {
+      //           $(".alert").fadeTo(300, 0).slideUp(300, function() {
+      //             $(this).remove();
+      //           });
+      //         }, 4000);
+      //         $('input[type="radio"]').attr('disabled', true);
+      //       },
+      //       error: function(data) {
+      //         var errors = data.responseJSON;
+      //         console.log(errors);
+      //       }
+      //     });
+      //   });
       $('#btn-submit-modal').on("click", function(event) {
         event.preventDefault()
         var data = $('form').serialize();
-
         $.ajax({
           url: "{{ route('vote') }}",
           method: "POST",
           data: data,
           success: function(data) {
-            loadDataChart();
+          console.log(data);
+            // loadDataChart();
             $('#hasil-sementara').modal('show');
             $(".alert-success").css("display", "block");
-            $(".warning").append("<strong class='text-center text-light'>" + data + "</strong");
+            $(".warning").append(
+              "<div class='text-center text-light' style='padding-top: 1.5rem; padding-bottom: 1.5rem; font-weight: bold;'>" +
+              data + "</div");
             $(".warning-start").hide();
             $(".alert-success").append("<strong class='text-center'>" + data + "</strong");
-            $(".result").append(
-              "<button class='btn btn-primary d-block' type='button' id='btn-See'>Lihat Hasil Sementara</button>"
-            )
+            // $(".result").append(
+            //   "<button class='btn btn-primary d-block' type='button' id='btn-See'>Lihat Hasil Sementara</button>"
+            // )
             $("#btn-submit").remove()
-            window.setTimeout(function() {
-              $(".alert").fadeTo(300, 0).slideUp(300, function() {
-                $(this).remove();
-              });
-            }, 4000);
+            //window.setTimeout(function() {
+            //  $(".alert").fadeTo(300, 0).slideUp(300, function() {
+            //    $(this).remove();
+            //  });
+            //}, 4000);
             $('input[type="radio"]').attr('disabled', true);
           },
           error: function(data) {
@@ -549,9 +583,7 @@
             console.log(errors);
           }
         });
-
       });
-
       const colors = [{
           backgroundColor: 'rgba(255, 99, 132, 0.2)',
           borderColor: 'rgba(255, 99, 132, 1)'
@@ -565,12 +597,10 @@
           borderColor: 'rgba(54, 235, 65)'
         }
       ]
-
       function updateChart(data) {
         var smft_calons = [];
         for (var k in data.SMFT) smft_calons.push(k);
         var prodis = data.SMFT[smft_calons[0]]?.prodis;
-
         var smftDatasets = [];
         for (let i = 0; i < smft_calons.length; i++) {
           smftDatasets.push({
@@ -585,11 +615,8 @@
           labels: prodis,
           datasets: smftDatasets
         };
-
-
         var bpmft_calons = [];
         for (var k in data.BPMFT) bpmft_calons.push(k);
-
         const datesetsBpmft = [];
         for (let i = 0; i < bpmft_calons.length; i++) {
           datesetsBpmft.push({
@@ -604,7 +631,6 @@
           labels: prodis,
           datasets: datesetsBpmft
         };
-
         var chartSMFT = new Chart(cSmft, {
           type: 'bar',
           data: datasmft,
@@ -618,7 +644,6 @@
             }
           }
         });
-
         var chartBPMFT = new Chart(cBpmft, {
           type: 'bar',
           data: databpmft,
@@ -633,7 +658,6 @@
           }
         });
       }
-
       $('.btn-visiMisi').click(function() {
         var id = $(this).data('id');
         $.ajax({
@@ -648,7 +672,6 @@
           }
         });
       });
-
       $(document).on("click", '#btn-See', function() {
         loadDataChart();
         $('#hasil-sementara').modal('show');

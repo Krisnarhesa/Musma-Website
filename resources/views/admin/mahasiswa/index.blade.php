@@ -73,6 +73,7 @@
               <th>No</th>
               <th>Nama</th>
               <th>Nim</th>
+              <th>Program Studi</th>
               <th>File</th>
               <th>Status</th>
               <th>Registered At</th>

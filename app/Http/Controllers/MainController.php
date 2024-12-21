@@ -85,19 +85,38 @@ class MainController extends Controller
 
     public function vote(Request $request)
     {
-        $data = json_decode(file_get_contents(public_path('data/info.json')), true);
-        $voteDate = app()->environment('local') ? date('Y-m-d') : $data['masa_pemilihan']['date'];
+        // $data = json_decode(file_get_contents(public_path('data/info.json')), true);
+        // $voteDate = app()->environment('local') ? date('Y-m-d') : $data['masa_pemilihan']['date'];
+
+        // $voteDate = '2024-01-14';
+
+        // if (!Auth::check()) {
+        //     return "Vote gagal, Silahkan Login Dengan Akun Terverifikasi";
+        // }
+
+        // if (date('Y-m-d') !== $voteDate) {
+        //     return "Vote hanya dapat dilakukan pada tanggal 14 Januari 2024 pukul 06.00 - 24.00";
+        // }
+
+        // $voteDate = '2024-01-14';
+        $currentDate = now()->format('Y-m-d H:i:s');
 
         if (!Auth::check()) {
             return "Vote gagal, Silahkan Login Dengan Akun Terverifikasi";
         }
 
-        if (date('Y-m-d') !== $voteDate) {
-            return "Vote Hanya dapat dilakukan pada tanggal " . $data['masa_pemilihan']['description'];
+        // if (date('Y-m-d') !== $voteDate) {
+        //     // return "Vote Hanya dapat dilakukan pada tanggal 14 Januari 2024";
+        //     return "Vote hanya dapat dilakukan pada tanggal 14 Januari 2024 pukul 06.00 - 23.59";
+        // }
+
+        if ($currentDate < '2024-12-20 06:00:00' || $currentDate > '2024-12-21 23:59:59') {
+            return "Vote hanya dapat dilakukan pada tanggal 14 Januari 2024 pukul 06.00 - 24.00";
         }
 
         $id_user = Auth::id();
         $mahasiswa = Mahasiswa::where('user_id', $id_user)->first();
+        $user = User::find($id_user);
 
         if (!$mahasiswa) {
             return "Vote Gagal, Maaf Anda Belum Terverifikasi";

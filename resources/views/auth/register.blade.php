@@ -1,8 +1,12 @@
 @extends('layouts.teknik')
 
 @section('content')
+@php
+  $date = date('Y-m-d');
+  $voteDate = '2024-12-17';
+@endphp
   <div>
-    @if (true)
+    @if ($date != $voteDate)
       <h1 style="text-align:center;font-weight:700;">REGISTER</h1>
 
       <div class="form-custom-layout">

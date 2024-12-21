@@ -9,8 +9,8 @@
   <meta name="csrf-token" content="{{ csrf_token() }}">
   <title>{{ $title ?? '' }}</title>
 
-  <meta name="keywords" content="Musma Teknik 2023" />
-  <meta name="description" content="Musma Teknik 2023">
+  <meta name="keywords" content="Musma Teknik 2024" />
+  <meta name="description" content="Musma Teknik 2024">
   <meta name="SMFT" content="smft.unud.id/musma">
 
   <!-- Favicon -->
@@ -51,7 +51,7 @@
   <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
 
   <!-- Skin CSS -->
-  <link rel="stylesheet" href="/css/skins/default.css">
+  <link rel="stylesheet" href="/css/skins/default.css"> {{-- ganti default dengan warna backgorund yang diinginkan --}}
 
   <!-- Theme Custom CSS -->
   <link rel="stylesheet" href="/css/custom.css">
@@ -102,7 +102,7 @@
           <div class="container py-2">
             <div class="row py-4">
               <div class="col d-flex align-items-center justify-content-center">
-                <p><strong>MUSMA TEKNIK 2023</strong> - © Copyright 2023. All Rights Reserved.</p>
+                <p><strong>MUSMA TEKNIK 2024</strong> - © Copyright 2024. All Rights Reserved.</p>
               </div>
             </div>
           </div>
