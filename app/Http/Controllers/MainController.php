@@ -110,8 +110,8 @@ class MainController extends Controller
         //     return "Vote hanya dapat dilakukan pada tanggal 14 Januari 2024 pukul 06.00 - 23.59";
         // }
 
-        if ($currentDate < '2024-12-20 06:00:00' || $currentDate > '2024-12-21 23:59:59') {
-            return "Vote hanya dapat dilakukan pada tanggal 14 Januari 2024 pukul 06.00 - 24.00";
+        if ($currentDate < '2025-01-10 06:00:00' || $currentDate > '2025-01-10 23:59:59') {
+            return "Vote hanya dapat dilakukan pada tanggal 10 Januari 2025 pukul 06.00 - 23.59";
         }
 
         $id_user = Auth::id();

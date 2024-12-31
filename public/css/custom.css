@@ -35,6 +35,11 @@ body {
 .custom-radio input {
   display: none;
 }
+
+.custom-radio-smft input {
+  display: none;
+}
+
 .img-fluids {
   position: relative;
   vertical-align: middle;
@@ -102,6 +107,71 @@ body {
 }
 
 .custom-radio input:checked + .radio-btn > i {
+  opacity: 1;
+  transform: translateX(-50%) scale(1);
+}
+
+.radio-btn-smft {
+  margin: 10px;
+  width: 290px;
+  height: 280px;
+  border: 3px solid transparent;
+  display: inline-block;
+  border-radius: 10px;
+  position: relative;
+  text-align: center;
+  box-shadow: 0px 6px 24px 5px rgba(236, 228, 91, 0.2);
+  cursor: pointer;
+}
+
+.radio-btn-smft > i {
+  color: #ffffff;
+  background-color: #EBCC5A !important;
+  font-size: 20px;
+  position: absolute;
+  top: -15px;
+  left: 50%;
+  transform: translateX(-50%) scale(4);
+  border-radius: 50px;
+  padding: 3px;
+  transition: 0.2s;
+  pointer-events: none;
+  opacity: 0;
+}
+
+.radio-btn-smft .poll-icon-smft {
+  width: 150px;
+  height: 150px;
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.radio-btn-smft .poll-icon-smft i {
+  color: #EBCC5A  !important;
+  line-height: 80px;
+  font-size: 60px;
+}
+
+.radio-btn-smft .poll-icon-smft h3 {
+  color: #EBCC5A  !important;
+  font-family: "Raleway", sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  text-transform: uppercase;
+  margin-bottom: 0px !important;
+}
+.radio-btn-smft .poll-icon-smft small a {
+  margin-top: 100px !important;
+}
+
+.custom-radio-smft input:checked + .radio-btn-smft {
+  border: 10px solid transparent !important;
+  border-image: url("../img/photo-card-fill-SMFT.png") 40 round !important;
+}
+
+.custom-radio-smft input:checked + .radio-btn-smft > i {
   opacity: 1;
   transform: translateX(-50%) scale(1);
 }

@@ -7,7 +7,7 @@
   <!-- Favicon -->
   <link rel="shortcut icon" href="/img/apple-icon-precomposed.png" type="image/x-icon" />
   <link rel="apple-touch-icon" href="/img/apple-icon-precomposed.png">
-  
+
   <!-- CSRF Token -->
   <meta name="csrf-token" content="{{ csrf_token() }}">
 
@@ -28,7 +28,7 @@
   <div id="app" class="position-relative w-100 d-flex align-items-center justify-content-center"
     style="min-height: 100vh;overflow:hidden; background: black; padding:100px 0 60px 0px;">
 
-    <div class="position-absolute bg-custom-red">
+    <div class="position-absolute bg-custom-red hidden">
       <img src="/img/logo-red.png" alt="Logo Teknik">
     </div>
 
@@ -36,7 +36,7 @@
       @yield('content')
     </main>
 
-    <a href="/" class=""
+    <a href="/" id="logoContainer" class=""
       style="position:fixed;left:50%; transform:translateX(-50%);top: 20px; z-index:9999;">
       <img width="120" src="img/logo-musma.png" alt="Ukiran">
     </a>
@@ -60,7 +60,21 @@
   <script src="/vendor/jquery.appear/jquery.appear.min.js"></script>
   <script src="/vendor/jquery.easing/jquery.easing.min.js"></script>
   <script src="/vendor/jquery.cookie/jquery.cookie.min.js"></script>
-  <script></script>
+  <script>
+    const logoContainer = document.getElementById('logoContainer');
+
+    function handleScroll() {
+      const scrolled = window.pageYOffset;
+
+      if (scrolled > 5) {
+        logoContainer.style.display = 'none';
+      } else {
+        logoContainer.style.display = 'block';
+      }
+    }
+
+    window.addEventListener('scroll', handleScroll);
+  </script>
 </body>
 
 </html>
@@ -143,7 +157,8 @@
     }
 
     .corner-top-right {
-        right:-25px; top:-9px;
+      right: -25px;
+      top: -9px;
     }
   }
 </style>
